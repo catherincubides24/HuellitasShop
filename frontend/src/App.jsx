@@ -1,0 +1,143 @@
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Footer from "./components/layout/Footer";
+import Navbar from "./components/layout/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
+import { CartProvider } from "./context/CartContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import { LanguageProvider } from "./context/LanguageContext";
+import AdminOrdersPage from "./pages/AdminOrdersPage";
+import AdminPage from "./pages/AdminPage";
+import AdminSalesPage from "./pages/AdminSalesPage";
+import CartPage from "./pages/CartPage";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import PaymentCancelPage from "./pages/PaymentCancelPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
+import PurchasesPage from "./pages/PurchasesPage";
+import RegisterPage from "./pages/RegisterPage";
+import InactivityGuard from "./components/InactivityGuard";
+import AdminReportsPage from "./pages/AdminReportsPage";
+import BackupPage from "./pages/BackupPage";
+import SessionNotice from "./components/SessionNotice";
+import AdminLogsPage from "./pages/AdminLogsPage";
+
+function AppShell() {
+  return (
+    <div className="relative min-h-screen overflow-x-hidden font-body text-ink">
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <div className="absolute -left-24 top-8 h-80 w-80 rounded-full bg-coral/25 blur-3xl" />
+        <div className="absolute right-0 top-1/3 h-96 w-96 rounded-full bg-mint/20 blur-3xl" />
+        <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-peach/30 blur-3xl" />
+      </div>
+
+      <Navbar />
+      <SessionNotice />
+      <InactivityGuard />
+
+      <main className="mx-auto w-full max-w-7xl px-4 pb-16 pt-8 sm:px-6 lg:px-8">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <CartPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/purchases"
+            element={
+              <ProtectedRoute>
+                <PurchasesPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Módulos de administración y gestión para Staff (ADMIN y WORKER) */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute requireStaff>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/sales"
+            element={
+              <ProtectedRoute requireStaff>
+                <AdminSalesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/orders"
+            element={
+              <ProtectedRoute requireStaff>
+                <AdminOrdersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/reports"
+            element={
+              <ProtectedRoute requireStaff>
+                <AdminReportsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Backup y restauración de BD — Solo para Administrador y Trabajador */}
+          <Route
+            path="/backup"
+            element={
+              <ProtectedRoute requireStaff>
+                <BackupPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Rutas de pago PayPal — públicas porque PayPal redirige aquí sin token */}
+          <Route path="/payment/success" element={<PaymentSuccessPage />} />
+          <Route path="/payment/cancel" element={<PaymentCancelPage />} />
+
+          <Route
+          path="/admin/logs"
+          element={
+          <ProtectedRoute requireAdmin>
+          <AdminLogsPage />
+          </ProtectedRoute>
+  }
+/>
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <ThemeProvider>
+        <LanguageProvider>
+          <BrowserRouter>
+            <AuthProvider>
+              <CartProvider>
+                <AppShell />
+              </CartProvider>
+            </AuthProvider>
+          </BrowserRouter>
+        </LanguageProvider>
+      </ThemeProvider>
+    </GoogleOAuthProvider>
+  );
+}

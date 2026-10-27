@@ -1,0 +1,58 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: petshop-backend
+  jackson:
+    time-zone: America/Bogota
+  servlet:
+    multipart:
+      max-file-size: ${MULTIPART_MAX_FILE_SIZE:10MB}
+      max-request-size: ${MULTIPART_MAX_REQUEST_SIZE:10MB}
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/petshop_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+  data:
+    web:
+      pageable:
+        max-page-size: 50
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:validate}
+    show-sql: ${JPA_SHOW_SQL:false}
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: America/Bogota
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+
+paypal:
+  client-id: ${PAYPAL_CLIENT_ID}
+  client-secret: ${PAYPAL_CLIENT_SECRET}
+  mode: ${PAYPAL_MODE:sandbox}
+
+springdoc:
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}
+    path: /swagger-ui.html
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
+    path: /api-docs
+
+google:
+  client-id: ${GOOGLE_CLIENT_ID}
+
+app:
+  frontend-url: ${FRONTEND_URL:http://localhost:5173}
+  cors-allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+  admin:
+    initial-password: ${ADMIN_INITIAL_PASSWORD}
+  session:
+    policy: ${SESSION_POLICY:BLOCK}
+    inactivity-timeout: ${SESSION_INACTIVITY_TIMEOUT:2m}
