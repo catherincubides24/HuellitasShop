@@ -25,3 +25,6 @@ coverage/
 
 # Temporary
 *.tmp
+
+backend/errores.txt
+frontend/npm
